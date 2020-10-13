@@ -57,7 +57,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<jflat.version>1.2.0</jflat.version>
 		<slf4j.version>1.7.30</slf4j.version>
-		<junit.version>4.13</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<jacoco.version>0.8.5</jacoco.version>
 		<coverage.totalLineRate>0.87</coverage.totalLineRate>
 		<coverage.missedclasses>0</coverage.missedclasses>
