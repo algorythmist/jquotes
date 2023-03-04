@@ -3,6 +3,7 @@ package com.tecacet.jquotes.tiingo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.tecacet.jquotes.token.EnvironmentTokenSupplier;
 import com.tecacet.jquotes.token.FixedTokenSupplier;
 import com.tecacet.jquotes.token.TokenSupplier;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class TiingoClient {
     }
 
     public static TiingoClient getInstance() {
-        return new TiingoClient(new FixedTokenSupplier("0a8b365a4008bab0eec5a51d3f81daccc1d77978"));
+        return new TiingoClient(new EnvironmentTokenSupplier("TIINGO_TOKEN"));
     }
     @SneakyThrows
     public StockMetadata getMetadata(String symbol) {
