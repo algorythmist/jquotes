@@ -1,7 +1,5 @@
 package com.tecacet.jquotes.yahoo;
 
-
-
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

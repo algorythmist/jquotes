@@ -1,17 +1,15 @@
 package com.tecacet.jquotes.tiingo;
 
-import com.tecacet.jquotes.Quote;
-import com.tecacet.jquotes.QuoteUtils;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TiingoClientTest {
 
@@ -25,7 +23,7 @@ class TiingoClientTest {
         assertEquals("Tesla Inc", result.getName());
         assertEquals("NASDAQ", result.getExchangeCode());
         assertEquals("TSLA", result.getTicker());
-        assertEquals(LocalDate.of(2010,6,29), result.getStartDate());
+        assertEquals(LocalDate.of(2010, 6, 29), result.getStartDate());
 
     }
 
