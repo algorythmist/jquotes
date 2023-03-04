@@ -2,6 +2,7 @@ package com.tecacet.jquotes;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface Quote {
 
@@ -15,8 +16,6 @@ public interface Quote {
 
     BigDecimal getLow();
 
-    BigDecimal getAdjustedClose();
-
     Long getVolume();
-
+    
 }
