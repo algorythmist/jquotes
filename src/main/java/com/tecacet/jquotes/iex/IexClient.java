@@ -53,13 +53,13 @@ public class IexClient {
         return new IexClient(new EnvironmentTokenSupplier("IEX_TOKEN"));
     }
 
-    public Quote getDelayedQuote(String symbol) {
-        Map<String, Quote> quotes = getDelayedQuotes(symbol);
+    public IexQuote getDelayedQuote(String symbol) {
+        Map<String, IexQuote> quotes = getDelayedQuotes(symbol);
         return quotes.get(symbol);
     }
 
     @SneakyThrows
-    public Map<String, Quote> getDelayedQuotes(String... symbols) {
+    public Map<String, IexQuote> getDelayedQuotes(String... symbols) {
         String symbolsString = String.join(",", symbols);
         HttpUrl.Builder urlBuilder = HttpUrl.parse(URL_BATCH_BASE).newBuilder();
         urlBuilder.addQueryParameter("token", tokenSupplier.getToken());
@@ -73,7 +73,7 @@ public class IexClient {
     }
 
     @SneakyThrows
-    public List<HistoricalQuote> getDailyQuotes(String symbol, Range range) {
+    public List<IexHistoricalQuote> getDailyQuotes(String symbol, Range range) {
         String url = String.format(CHART_URL, symbol, range.getCode());
         log.info("Calling {}", url);
         val content = execute(buildUrl(url));
@@ -115,9 +115,9 @@ public class IexClient {
         return content;
     }
 
-    private Map<String, Quote> parseQuotes(String json) throws JsonProcessingException {
+    private Map<String, IexQuote> parseQuotes(String json) throws JsonProcessingException {
         JsonNode root = objectMapper.readTree(json);
-        Map<String, Quote> quotes = new HashMap<>();
+        Map<String, IexQuote> quotes = new HashMap<>();
         for (Iterator<Map.Entry<String, JsonNode>> it = root.fields(); it.hasNext(); ) {
             Map.Entry<String, JsonNode> entry = it.next();
             QuoteWrapper qw = objectMapper.convertValue(entry.getValue(), QuoteWrapper.class);
@@ -132,5 +132,5 @@ public class IexClient {
 @JsonIgnoreProperties(ignoreUnknown = true)
 class QuoteWrapper {
 
-    private Quote quote;
+    private IexQuote quote;
 }

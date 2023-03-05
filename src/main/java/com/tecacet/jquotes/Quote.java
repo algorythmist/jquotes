@@ -17,5 +17,9 @@ public interface Quote {
     BigDecimal getLow();
 
     Long getVolume();
+
+    Optional<BigDecimal> getDividend();
+
+    Optional<BigDecimal> getSplitRatio();
     
 }

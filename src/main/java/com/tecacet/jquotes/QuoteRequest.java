@@ -1,33 +1,126 @@
 package com.tecacet.jquotes;
 
-import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Getter
-@Builder
 public class QuoteRequest {
 
-    private QuoteProvider quoteProvider;
-    @Builder.Default
-    private List<String> symbols = new ArrayList<>();
+    private final QuoteProvider quoteProvider;
+    private String providerToken;
+    private final List<String> symbols;
+    private final LocalDate fromDate;
+    private final LocalDate toDate;
+    private final boolean adjusted;
+    private final boolean includeDividends;
+    private final boolean includeSplits;
+    private final PeriodType periodType;
 
-    private LocalDate fromDate;
+    public static Builder builder() {
+        return new QuoteRequest.Builder();
+    }
 
-    private LocalDate toDate;
+    public static class Builder {
 
-    @Builder.Default
-    private boolean adjusted = false;
+        private QuoteProvider quoteProvider = QuoteProvider.YAHOO;
+        private String providerToken;
+        private final List<String> symbols = new ArrayList<>();
+        private LocalDate fromDate;
+        private LocalDate toDate;
+        private boolean adjusted = false;
+        private boolean includeDividends = true;
+        private boolean includeSplits = true;
+        private PeriodType periodType = PeriodType.DAY;
 
-    @Builder.Default
-    private boolean includeDividends = true;
+        public Builder setQuoteProvider(QuoteProvider quoteProvider) {
+            this.quoteProvider = quoteProvider;
+            return this;
+        }
 
-    @Builder.Default
-    private boolean includeSplits = true;
+        public Builder addSymbol(String symbol) {
+            this.symbols.add(symbol);
+            return this;
+        }
 
-    @Builder.Default
-    private PeriodType periodType = PeriodType.DAY;
+        public Builder addSymbols(String... symbols) {
+            Collections.addAll(this.symbols, symbols);
+            return this;
+        }
+
+        public Builder setFromDate(LocalDate fromDate) {
+            this.fromDate = fromDate;
+            return this;
+        }
+
+        public Builder setToDate(LocalDate toDate) {
+            this.toDate = toDate;
+            return this;
+        }
+
+        public Builder setAdjusted(boolean adjusted) {
+            this.adjusted = adjusted;
+            return this;
+        }
+
+        public Builder setIncludeDividends(boolean includeDividends) {
+            this.includeDividends = includeDividends;
+            return this;
+        }
+
+        public Builder setIncludeSplits(boolean includeSplits) {
+            this.includeSplits = includeSplits;
+            return this;
+        }
+
+        public Builder setPeriodType(PeriodType periodType) {
+            this.periodType = periodType;
+            return this;
+        }
+
+        public QuoteRequest build() {
+            return new QuoteRequest(this);
+        }
+    }
+
+    private QuoteRequest(Builder builder) {
+        this.quoteProvider = builder.quoteProvider;
+        this.symbols = builder.symbols;
+        this.fromDate = builder.fromDate;
+        this.toDate = builder.toDate;
+        this.adjusted = builder.adjusted;
+        this.includeDividends = builder.includeDividends;
+        this.includeSplits = builder.includeSplits;
+        this.periodType = builder.periodType;
+        validate();
+    }
+
+    private void validate() {
+        if (quoteProvider == null) {
+            throw new IllegalArgumentException("quote provider is required");
+        }
+        if (toDate == null || fromDate == null) {
+            throw new IllegalArgumentException("from and to date must not be null");
+        }
+        if (symbols.isEmpty()) {
+            throw new IllegalArgumentException("At least one symbol must be supplied");
+        }
+        Map<String, String> env = System.getenv();
+        if (QuoteProvider.TIINGO == quoteProvider &&
+                providerToken == null
+                && !env.containsKey("TIINGO_TOKEN")) {
+            throw new IllegalArgumentException("A tokem must be supplied or the environment variable TIINGO_TOKEN must be set");
+        }
+        if (QuoteProvider.IEX == quoteProvider &&
+                providerToken == null
+                && !env.containsKey("IEX_TOKEN")) {
+            throw new IllegalArgumentException("A tokem must be supplied or the environment variable IEX_TOKEN must be set");
+        }
+    }
+
+
 }

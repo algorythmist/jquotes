@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class QuoteUtils {
 
-    public static SortedMap<LocalDate, Quote> toMap(List<? extends Quote> quotes) {
+    public static SortedMap<LocalDate, Quote> toSortedMap(List<? extends Quote> quotes) {
         return quotes.stream().collect(Collectors.toMap(Quote::getDate, Function.identity(),
                 (a , b) -> a,
                 TreeMap::new));

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Quote {
+public class IexQuote {
 
     private String symbol;
     private String companyName;

@@ -2,15 +2,16 @@ package com.tecacet.jquotes.tiingo;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
+//TODO: test dividend
 class TiingoClientTest {
 
     TiingoClient tiingoClient = TiingoClient.getInstance();
@@ -35,7 +36,7 @@ class TiingoClientTest {
     }
 
     @Test
-    void getQuoteHistory() {
+    void getQuoteHistory() throws IOException {
         List<TiingoQuote> quotes = tiingoClient.getQuoteHistory("TSLA",
                 LocalDate.of(2019, 1, 1),
                 LocalDate.of(2020, 9, 15));
@@ -44,10 +45,11 @@ class TiingoClientTest {
                 .collect(Collectors.toMap(TiingoQuote::getDate, Function.identity()));
         TiingoQuote splitQuote = quoteMap.get(LocalDate.of(2020, 8, 31));
         assertEquals(5.0, splitQuote.getSplitFactor().doubleValue(), 0.001);
+        assertEquals(5.0, splitQuote.getSplitRatio().get().doubleValue(), 0.001);
     }
 
     @Test
-    void mutualFunds() {
+    void mutualFunds() throws IOException {
         TiingoClient tiingoClient = TiingoClient.getInstance();
         StockMetadata metadata = tiingoClient.getMetadata("VMFXX");
         assertEquals("VANGUARD FEDERAL MONEY MARKET FUND INVESTOR SHARES", metadata.getName());
@@ -62,6 +64,18 @@ class TiingoClientTest {
                 LocalDate.of(2020, 1, 11));
         assertEquals(259, quotes.size());
 
+    }
+
+    @Test
+    void missingSymbol() throws IOException {
+        try {
+            tiingoClient.getQuoteHistory("ABCDEF",
+                    LocalDate.of(2019, 1, 1),
+                    LocalDate.of(2020, 1, 11));
+            fail();
+        } catch (IOException ioe) {
+            assertEquals("Call failed with code 404 and message: {\"detail\":\"Error: Ticker 'ABCDEF' not found\"}", ioe.getMessage());
+        }
     }
 
 }

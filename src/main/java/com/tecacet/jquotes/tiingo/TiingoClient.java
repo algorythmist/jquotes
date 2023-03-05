@@ -60,8 +60,7 @@ public class TiingoClient {
         return quotes.isEmpty() ? null : quotes.get(0);
     }
 
-    @SneakyThrows
-    public List<TiingoQuote> getQuoteHistory(String symbol, LocalDate startDate, LocalDate endDate) {
+    public List<TiingoQuote> getQuoteHistory(String symbol, LocalDate startDate, LocalDate endDate) throws IOException {
         //TODO: url builder
         String url = String.format("%s/%s/prices?startDate=%s&endDate=%s", DAILY_URL_BASE, symbol,
                 startDate, endDate);

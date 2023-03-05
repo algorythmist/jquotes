@@ -6,6 +6,8 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 
 @Getter
 @Builder
@@ -30,5 +32,5 @@ public class QuoteResponse {
     @Builder.Default
     private PeriodType periodType = PeriodType.DAY;
 
-    private List<Quote> quotes;
+    private Map<String, SortedMap<LocalDate, Quote>> quotes;
 }

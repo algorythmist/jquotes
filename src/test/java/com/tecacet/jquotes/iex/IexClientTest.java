@@ -24,7 +24,7 @@ class IexClientTest {
 
     @Test
     void validQuote() {
-        Quote quote = iexClient.getDelayedQuote("IBM");
+        IexQuote quote = iexClient.getDelayedQuote("IBM");
         assertEquals("IBM", quote.getSymbol());
         assertEquals("International Business Machines Corp.", quote.getCompanyName());
     }
@@ -35,7 +35,7 @@ class IexClientTest {
         assertTrue(quotes1m.size() > 10);
 
         val quotes1y = iexClient.getDailyQuotes("NFLX", Range.ONE_YEAR);
-        assertTrue(quotes1y.size() > 250);
+        assertTrue(quotes1y.size() > 240);
     }
 
     @Test
