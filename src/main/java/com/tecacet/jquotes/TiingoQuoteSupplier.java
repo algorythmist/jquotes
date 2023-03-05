@@ -27,6 +27,7 @@ public class TiingoQuoteSupplier implements QuoteSupplier {
             } catch (IOException ioe) {
                 log.warn("Could not retrieve data for {}", symbol);
             }
+            //TODO: resample
 
         }
         return QuoteResponse.builder()
