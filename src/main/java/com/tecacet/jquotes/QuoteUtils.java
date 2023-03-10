@@ -15,4 +15,10 @@ public class QuoteUtils {
                 (a , b) -> a,
                 TreeMap::new));
     }
+
+    public static <T> SortedMap<LocalDate, T> truncate(SortedMap<LocalDate, T> quotes,
+                                                       LocalDate fromDate, LocalDate toDate) {
+        var truncated =  quotes.tailMap(fromDate);
+        return truncated.isEmpty() ? truncated : truncated.headMap(toDate.plusDays(1)) ;
+    }
 }

@@ -33,16 +33,16 @@ public class IexQuoteSupplier implements QuoteSupplier {
             //TODO: handle missing symbols
             //TODO: get dividends and splits
             //TODO: handle adjusted
-            //TODO: truncate range
-            map.put(symbol, QuoteUtils.toSortedMap(quotes));
+            SortedMap<LocalDate, Quote> quoteMap = QuoteUtils.toSortedMap(quotes);
+            map.put(symbol, QuoteUtils.truncate(quoteMap, request.getFromDate(), request.getToDate()));
         }
         return QuoteResponse.builder()
                 .quotes(map)
                 .adjusted(request.isAdjusted())
                 .includeDividends(request.isIncludeDividends())
                 .includeSplits(request.isIncludeSplits())
-                .fromDate(request.getFromDate())
-                .toDate(request.getToDate())
+                .fromDate(request.getFromDate()) //TODO: actual
+                .toDate(request.getToDate()) //TODO: actual
                 .periodType(request.getPeriodType())
                 .symbols(request.getSymbols())
                 .build();
