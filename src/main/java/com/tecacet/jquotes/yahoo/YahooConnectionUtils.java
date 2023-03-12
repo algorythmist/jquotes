@@ -21,9 +21,15 @@ import java.util.Map.Entry;
 @Slf4j
 public class YahooConnectionUtils {
 
+    private static final String HISTQUOTES_BASE_URL = "https://query1.finance.yahoo.com/v7/finance/download/";
 
-    private static final String HISTQUOTES2_BASE_URL = "https://query1.finance.yahoo.com/v7/finance/download/";
+    private static final String QUOTE_BASE_URL = "https://query1.finance.yahoo.com/v7/finance/quote?lang=en-US&region=US&corsDomain=finance.yahoo.com&symbols=%s";
+
     private static final int CONNECTION_TIMEOUT = 10000;
+
+    public static String getQuoteBaseUrl(String... quotes) {
+        return String.format(QUOTE_BASE_URL, String.join(",", quotes));
+    }
 
     public static Map<String, String> getRequestParams(LocalDate from, LocalDate to, PeriodType periodType) throws IOException {
         Map<String, String> params = new LinkedHashMap<>();
@@ -36,7 +42,7 @@ public class YahooConnectionUtils {
     }
 
     public static InputStream getUrlStream(String symbol, Map<String, String> params) throws IOException {
-        String url = HISTQUOTES2_BASE_URL + URLEncoder.encode(symbol, StandardCharsets.UTF_8) + "?" + getURLParameters(params);
+        String url = HISTQUOTES_BASE_URL + URLEncoder.encode(symbol, StandardCharsets.UTF_8) + "?" + getURLParameters(params);
 
         // Get CSV from Yahoo
         log.info("Sending request: {}", url);
@@ -51,7 +57,7 @@ public class YahooConnectionUtils {
         return connection.getInputStream();
     }
 
-    private static String getURLParameters(Map<String, String> params) throws UnsupportedEncodingException {
+    private static String getURLParameters(Map<String, String> params) {
         StringBuilder sb = new StringBuilder();
         for (Entry<String, String> entry : params.entrySet()) {
             if (sb.length() > 0) {

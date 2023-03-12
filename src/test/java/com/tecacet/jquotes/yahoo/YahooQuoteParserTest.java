@@ -1,5 +1,6 @@
 package com.tecacet.jquotes.yahoo;
 
+import com.tecacet.jquotes.yahoo.model.YahooHistoricalQuote;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -16,9 +17,9 @@ public class YahooQuoteParserTest {
     void testParseStockHistory() throws IOException {
         YahooQuoteParser parser = new YahooQuoteParser();
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("TSLA.csv");
-        List<YahooQuote> prices = parser.parse(is);
+        List<YahooHistoricalQuote> prices = parser.parse(is);
         assertEquals(502, prices.size());
-        YahooQuote first = prices.get(0);
+        YahooHistoricalQuote first = prices.get(0);
         assertEquals(150.43, first.getAdjustedClose().doubleValue(), 0.001);
         assertEquals(150.43, first.getClose().doubleValue(), 0.001);
         assertEquals(4262400L, first.getVolume());

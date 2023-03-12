@@ -1,6 +1,8 @@
 package com.tecacet.jquotes.yahoo;
 
 import com.tecacet.jquotes.PeriodType;
+import com.tecacet.jquotes.yahoo.model.Split;
+import com.tecacet.jquotes.yahoo.model.YahooHistoricalQuote;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -20,21 +22,21 @@ class YahooFinanceClientTest {
 
         LocalDate fromDate = LocalDate.of(2018, 1, 2);
         LocalDate toDate = LocalDate.of(2018, 11, 1);
-        List<YahooQuote> prices = yahooFinanceClient.getHistoricalQuotes("AAPL", fromDate, toDate, PeriodType.DAY);
+        List<YahooHistoricalQuote> prices = yahooFinanceClient.getHistoricalQuotes("AAPL", fromDate, toDate, PeriodType.DAY);
         assertEquals(211, prices.size());
 
-        YahooQuote firstPrice = prices.get(0);
+        YahooHistoricalQuote firstPrice = prices.get(0);
         assertEquals(fromDate, firstPrice.getDate());
         //TODO validate quotes
 
-        YahooQuote lastPrice = prices.get(prices.size() - 1);
+        YahooHistoricalQuote lastPrice = prices.get(prices.size() - 1);
         assertEquals(LocalDate.of(2018, 10, 31), lastPrice.getDate());
         assertEquals(153435600, lastPrice.getVolume());
 
     }
 
     @Test
-    public void testGetSplitHistory() {
+    void testGetSplitHistory() {
 
         List<Split> splits = yahooFinanceClient.getSplitHistory("AAPL", LocalDate.of(2005, 1, 1), LocalDate.of(2015, 12, 31));
         assertEquals(2, splits.size());
@@ -48,7 +50,7 @@ class YahooFinanceClientTest {
     }
 
     @Test
-    public void testReverseSplit() {
+    void testReverseSplit() {
 
         List<Split> splits = yahooFinanceClient.getSplitHistory("ZSL", LocalDate.of(2010, 1, 1),
                 LocalDate.of(2016, 12, 31));
@@ -65,7 +67,7 @@ class YahooFinanceClientTest {
     }
 
     @Test
-    public void testGetHistoricalDividends() {
+    void testGetHistoricalDividends() {
 
         Map<LocalDate, BigDecimal> dividends = yahooFinanceClient.getHistoricalDividends("IBM", LocalDate.of(2014, 1, 1), LocalDate.of(2016, 1, 1));
         assertEquals(8, dividends.size());
@@ -81,8 +83,25 @@ class YahooFinanceClientTest {
     }
 
     @Test
-    public void getEntireDividendHistory() {
+    void getEntireDividendHistory() {
         Map<LocalDate, BigDecimal> dividends = yahooFinanceClient.getHistoricalDividends("AGG", LocalDate.of(2000, 1, 1), LocalDate.of(2016, 11, 9));
         assertEquals(157, dividends.size());
+    }
+
+    @Test
+    void getLatestQuote() throws IOException {
+        var quote = yahooFinanceClient.getLatestQuote("IBM");
+        assertEquals("USD", quote.getCurrency());
+        assertEquals("IBM", quote.getDisplayName());
+    }
+
+    @Test
+    void getBadQuote() {
+        try {
+            yahooFinanceClient.getLatestQuote("NOTEXISTS");
+            fail();
+        } catch (IOException ioe) {
+
+        }
     }
 }

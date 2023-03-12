@@ -50,8 +50,7 @@ public class TiingoClient {
         return objectMapper.readValue(content, StockMetadata.class);
     }
 
-    @SneakyThrows
-    public TiingoQuote getLastQuote(String symbol) {
+    public TiingoQuote getLastQuote(String symbol) throws IOException {
         String url = String.format("%s/%s/prices", DAILY_URL_BASE, symbol);
         log.info("Calling url {}", url);
         String content = execute(url);

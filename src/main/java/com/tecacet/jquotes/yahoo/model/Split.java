@@ -1,4 +1,4 @@
-package com.tecacet.jquotes.yahoo;
+package com.tecacet.jquotes.yahoo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

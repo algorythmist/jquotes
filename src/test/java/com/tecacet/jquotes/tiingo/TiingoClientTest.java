@@ -29,10 +29,9 @@ class TiingoClientTest {
     }
 
     @Test
-    void getLastQuote() {
+    void getLastQuote() throws IOException {
         TiingoQuote quote = tiingoClient.getLastQuote("TSLA");
         assertEquals(1.0, quote.getSplitFactor().doubleValue(), 0.001);
-        System.out.println(quote);
     }
 
     @Test

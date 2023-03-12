@@ -1,4 +1,4 @@
-package com.tecacet.jquotes.yahoo;
+package com.tecacet.jquotes.yahoo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.tecacet.jquotes.BaseQuote;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class YahooQuote extends BaseQuote {
+public class YahooHistoricalQuote extends BaseQuote {
 
     private BigDecimal adjustedClose;
 

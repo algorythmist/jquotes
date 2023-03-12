@@ -1,6 +1,8 @@
 package com.tecacet.jquotes.yahoo;
 
 import com.tecacet.jquotes.*;
+import com.tecacet.jquotes.yahoo.model.Split;
+import com.tecacet.jquotes.yahoo.model.YahooHistoricalQuote;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,7 +50,7 @@ public class YahooQuoteSupplier implements QuoteSupplier {
             for (Split split : splits) {
                 var quote = quotes.get(split.getDate());
                 if (quote != null) {
-                    ((YahooQuote) quote).setSplitRatio(split.getSplitRatio());
+                    ((YahooHistoricalQuote) quote).setSplitRatio(split.getSplitRatio());
                 }
             }
         }
@@ -61,7 +63,7 @@ public class YahooQuoteSupplier implements QuoteSupplier {
             for (LocalDate date : dividends.keySet()) {
                 var quote = quotes.get(date);
                 if (quote != null) {
-                    ((YahooQuote) quote).setDividend(dividends.get(date));
+                    ((YahooHistoricalQuote) quote).setDividend(dividends.get(date));
                 }
             }
         }

@@ -1,5 +1,7 @@
 package com.tecacet.jquotes.yahoo;
 
+import com.tecacet.jquotes.yahoo.model.Split;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

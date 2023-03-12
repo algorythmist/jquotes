@@ -1,7 +1,16 @@
 package com.tecacet.jquotes.yahoo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tecacet.jquotes.PeriodType;
+import com.tecacet.jquotes.yahoo.model.QuoteResponse;
+import com.tecacet.jquotes.yahoo.model.Split;
+import com.tecacet.jquotes.yahoo.model.YahooHistoricalQuote;
+import com.tecacet.jquotes.yahoo.model.YahooQuote;
+import lombok.Getter;
 import lombok.SneakyThrows;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,11 +25,40 @@ public class YahooFinanceClient {
     private final YahooSplitParser splitParser = new YahooSplitParser();
     private final YahooDividendParser dividendParser = new YahooDividendParser();
 
+    private final OkHttpClient httpClient = new OkHttpClient();
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     public static YahooFinanceClient getInstance() {
         return new YahooFinanceClient();
     }
 
-    public List<YahooQuote> getHistoricalQuotes(String ticker, LocalDate fromDate, LocalDate toDate, PeriodType periodType)
+    @Getter
+    static class QuoteResponseWrapper {
+        private QuoteResponse quoteResponse;
+    }
+    public YahooQuote getLatestQuote(String symbol) throws IOException {
+        var quotes = getLatestQuotes(symbol);
+        if (quotes.isEmpty()) {
+            throw new IOException("Quote not found");
+        }
+        return quotes.get(0);
+    }
+
+    public List<YahooQuote> getLatestQuotes(String... symbol) throws IOException {
+        String url = YahooConnectionUtils.getQuoteBaseUrl(symbol);
+        Request request = new Request.Builder().url(url).build();
+        Response response = httpClient.newCall(request).execute();
+        String content = response.body().string();
+        QuoteResponse quoteResponse =  objectMapper.readValue(content, QuoteResponseWrapper.class)
+                .getQuoteResponse();
+        if (quoteResponse.getError() != null) {
+            throw new IOException(quoteResponse.getError());
+        }
+        return quoteResponse.getQuotes();
+    }
+
+    public List<YahooHistoricalQuote> getHistoricalQuotes(String ticker, LocalDate fromDate, LocalDate toDate, PeriodType periodType)
         throws IOException {
         Map<String, String> params = YahooConnectionUtils.getRequestParams(fromDate, toDate, periodType);
         InputStream is = YahooConnectionUtils.getUrlStream(ticker, params);
