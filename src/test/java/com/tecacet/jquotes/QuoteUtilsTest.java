@@ -1,7 +1,11 @@
 package com.tecacet.jquotes;
 
+import com.tecacet.jquotes.yahoo.YahooQuoteParser;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.TreeMap;
 
@@ -39,6 +43,52 @@ class QuoteUtilsTest {
                 LocalDate.of(2022, 3, 3));
         assertEquals(LocalDate.of(2021, 6, 2), truncated.firstKey());
         assertEquals(LocalDate.of(2021, 12, 30), truncated.lastKey());
+
+    }
+
+    @Test
+    void resample() throws IOException {
+        var parser = new YahooQuoteParser();
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("TSLA.csv");
+        var quotes = QuoteUtils.toSortedMap(parser.parse(is));
+        assertEquals(LocalDate.of(2012, 1, 3), quotes.firstKey());
+        assertEquals(LocalDate.of(2013, 12, 31), quotes.lastKey());
+        var resampledByMonth = QuoteUtils.resample(quotes, PeriodType.MONTH);
+        assertEquals(24, resampledByMonth.size());
+        assertEquals(LocalDate.of(2012, 1, 31), resampledByMonth.firstKey());
+        assertEquals(LocalDate.of(2013, 12, 31), resampledByMonth.lastKey());
+
+        var resampledByYear= QuoteUtils.resample(quotes, PeriodType.YEAR);
+        assertEquals(2, resampledByYear.size());
+        assertEquals(LocalDate.of(2012, 12, 31), resampledByYear.firstKey());
+        assertEquals(LocalDate.of(2013, 12, 31), resampledByYear.lastKey());
+
+        var resampledByWeek= QuoteUtils.resample(quotes, PeriodType.WEEK);
+        assertEquals(104, resampledByWeek.size());
+        resampledByWeek.keySet().forEach(date -> {
+            if (date.equals(LocalDate.of(2012,4,5)) ||
+                date.equals(LocalDate.of(2013,3,28))) {
+                assertEquals(DayOfWeek.THURSDAY, DayOfWeek.from(date));
+            } else {
+                assertEquals(DayOfWeek.FRIDAY, DayOfWeek.from(date), date.toString());
+            }
+                });
+
+
+
+        try {
+            QuoteUtils.resample(quotes, PeriodType.DAY);
+            fail();
+        } catch (IllegalArgumentException iae) {
+
+        }
+
+        try {
+            QuoteUtils.resample(quotes, null);
+            fail();
+        } catch (IllegalArgumentException iae) {
+
+        }
 
     }
 }
