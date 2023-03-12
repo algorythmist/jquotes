@@ -1,7 +1,6 @@
-package com.tecacet.jquotes;
+package com.tecacet.jquotes.iex;
 
-import com.tecacet.jquotes.iex.IexClient;
-import com.tecacet.jquotes.iex.Range;
+import com.tecacet.jquotes.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,11 +33,13 @@ public class IexQuoteSupplier implements QuoteSupplier {
         var map = new HashMap<String, SortedMap<LocalDate, Quote>>();
         for (String symbol : request.getSymbols()) {
             //TODO: set range according to query
+            var range =  Range.FIVE_YEARS;
             try {
-                var quotes = iexClient.getDailyQuotes(symbol, Range.FIVE_YEARS);
-                //TODO: get dividends and splits
-                //TODO: handle adjusted
+                var quotes = iexClient.getDailyQuotes(symbol,range);
                 NavigableMap<LocalDate, Quote> timeSeries = QuoteUtils.toSortedMap(quotes);
+                addDividends(symbol,range, request, timeSeries);
+                addSplits(symbol,range, request, timeSeries);
+                //TODO: handle adjusted
                 if (request.getPeriodType() != PeriodType.DAY) {
                     timeSeries = QuoteUtils.resample(timeSeries, request.getPeriodType());
                 }
@@ -49,12 +50,40 @@ public class IexQuoteSupplier implements QuoteSupplier {
         }
         return QuoteResponse.builder()
                 .quotes(map)
-                .adjusted(request.isAdjusted())
+                .symbols(map.keySet())
+                .adjusted(false)
                 .includeDividends(request.isIncludeDividends())
                 .includeSplits(request.isIncludeSplits())
                 .periodType(request.getPeriodType())
-                .symbols(request.getSymbols())
                 .build();
+    }
+
+    private void addDividends(String symbol, Range range,
+                              QuoteRequest request,
+                              SortedMap<LocalDate, Quote> quotes) {
+        if (PeriodType.DAY == request.getPeriodType() && request.isIncludeDividends()) {
+            var dividends = iexClient.getDividends(symbol, range);
+            for (Dividend dividend : dividends) {
+                var quote = quotes.get(dividend.getRecordDate());
+                if (quote != null) {
+                    ((IexHistoricalQuote) quote).setDividend(dividend.getAmount());
+                }
+            }
+        }
+    }
+
+    private void addSplits(String symbol, Range range,
+                           QuoteRequest request,
+                           SortedMap<LocalDate, Quote> quotes) {
+        if (PeriodType.DAY == request.getPeriodType() && request.isIncludeSplits()) {
+            var splits = iexClient.getSplits(symbol, range);
+            for (Split split : splits) {
+                var quote = quotes.get(split.getExDate());
+                if (quote != null) {
+                    ((IexHistoricalQuote) quote).setSplitRatio(split.getSplitRatio());
+                }
+            }
+        }
     }
     
 }

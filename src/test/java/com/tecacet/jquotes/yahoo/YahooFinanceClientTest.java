@@ -25,7 +25,7 @@ class YahooFinanceClientTest {
 
         YahooQuote firstPrice = prices.get(0);
         assertEquals(fromDate, firstPrice.getDate());
-        //TODO validate prices
+        //TODO validate quotes
 
         YahooQuote lastPrice = prices.get(prices.size() - 1);
         assertEquals(LocalDate.of(2018, 10, 31), lastPrice.getDate());

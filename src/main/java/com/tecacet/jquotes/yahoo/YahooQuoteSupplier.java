@@ -1,8 +1,6 @@
-package com.tecacet.jquotes;
+package com.tecacet.jquotes.yahoo;
 
-import com.tecacet.jquotes.yahoo.Split;
-import com.tecacet.jquotes.yahoo.YahooFinanceClient;
-import com.tecacet.jquotes.yahoo.YahooQuote;
+import com.tecacet.jquotes.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

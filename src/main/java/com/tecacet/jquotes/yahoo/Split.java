@@ -12,19 +12,19 @@ import java.time.LocalDate;
 public class Split {
 
     private final LocalDate date;
-    private final int numerator;
-    private final int denominator;
+    private final int fromFactor;
+    private final int toFactor;
 
     public BigDecimal getSplitRatio() {
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), RoundingMode.HALF_EVEN);
+        return new BigDecimal(toFactor).divide(new BigDecimal(fromFactor), RoundingMode.HALF_EVEN);
     }
 
     public boolean isReverse() {
-        return numerator > denominator;
+        return fromFactor > toFactor;
     }
 
     @Override
     public String toString() {
-        return String.format("%d:%d on %s", denominator, numerator, date);
+        return String.format("%d:%d on %s", toFactor, fromFactor, date);
     }
 }

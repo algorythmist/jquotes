@@ -37,7 +37,7 @@ public class QuoteRequest {
         private boolean includeSplits = true;
         private PeriodType periodType = PeriodType.DAY;
 
-        public Builder setQuoteProvider(QuoteProvider quoteProvider) {
+        public Builder quoteProvider(QuoteProvider quoteProvider) {
             this.quoteProvider = quoteProvider;
             return this;
         }
@@ -52,32 +52,32 @@ public class QuoteRequest {
             return this;
         }
 
-        public Builder setFromDate(LocalDate fromDate) {
+        public Builder fromDate(LocalDate fromDate) {
             this.fromDate = fromDate;
             return this;
         }
 
-        public Builder setToDate(LocalDate toDate) {
+        public Builder toDate(LocalDate toDate) {
             this.toDate = toDate;
             return this;
         }
 
-        public Builder setAdjusted(boolean adjusted) {
+        public Builder adjusted(boolean adjusted) {
             this.adjusted = adjusted;
             return this;
         }
 
-        public Builder setIncludeDividends(boolean includeDividends) {
+        public Builder includeDividends(boolean includeDividends) {
             this.includeDividends = includeDividends;
             return this;
         }
 
-        public Builder setIncludeSplits(boolean includeSplits) {
+        public Builder includeSplits(boolean includeSplits) {
             this.includeSplits = includeSplits;
             return this;
         }
 
-        public Builder setPeriodType(PeriodType periodType) {
+        public Builder periodType(PeriodType periodType) {
             this.periodType = periodType;
             return this;
         }

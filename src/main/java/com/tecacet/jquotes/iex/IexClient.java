@@ -49,7 +49,7 @@ public class IexClient {
         return new IexClient(tokenSupplier);
     }
 
-    static IexClient getInstance() {
+    public static IexClient getInstance() {
         return new IexClient(new EnvironmentTokenSupplier("IEX_TOKEN"));
     }
 

@@ -1,7 +1,6 @@
-package com.tecacet.jquotes;
+package com.tecacet.jquotes.tiingo;
 
-import com.tecacet.jquotes.tiingo.TiingoClient;
-import com.tecacet.jquotes.tiingo.TiingoQuote;
+import com.tecacet.jquotes.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

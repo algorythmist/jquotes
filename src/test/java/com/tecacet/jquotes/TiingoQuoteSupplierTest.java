@@ -1,6 +1,7 @@
 package com.tecacet.jquotes;
 
 import com.tecacet.jquotes.tiingo.TiingoClient;
+import com.tecacet.jquotes.tiingo.TiingoQuoteSupplier;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -17,8 +18,8 @@ class TiingoQuoteSupplierTest {
     void missingRequiredParameter() {
         try {
             quoteSupplier.getHistoricalQuotes(QuoteRequest.builder()
-                    .setQuoteProvider(QuoteProvider.TIINGO)
-                    .setToDate(LocalDate.of(2023, 2, 28))
+                    .quoteProvider(QuoteProvider.TIINGO)
+                    .toDate(LocalDate.of(2023, 2, 28))
                     .addSymbols("AAPL", "IBM")
                     .build());
             fail();
@@ -30,9 +31,9 @@ class TiingoQuoteSupplierTest {
     @Test
     void getHistoricalQuotes() {
         var response = quoteSupplier.getHistoricalQuotes(QuoteRequest.builder()
-                .setQuoteProvider(QuoteProvider.TIINGO)
-                .setFromDate(LocalDate.of(2020, 1, 1))
-                .setToDate(LocalDate.of(2023, 2, 28))
+                .quoteProvider(QuoteProvider.TIINGO)
+                .fromDate(LocalDate.of(2020, 1, 1))
+                .toDate(LocalDate.of(2023, 2, 28))
                 .addSymbols("AAPL", "IBM")
                 .build());
         var quotes = response.getQuotes();
