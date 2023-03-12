@@ -34,7 +34,6 @@ public class TiingoQuoteSupplier implements QuoteSupplier {
         }
         return QuoteResponse.builder()
                 .quotes(map)
-                .symbols(map.keySet())
                 .adjusted(request.isAdjusted())
                 .includeDividends(true)
                 .includeSplits(true)

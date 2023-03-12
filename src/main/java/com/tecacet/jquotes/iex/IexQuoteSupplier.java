@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Collections;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.NavigableMap;
 import java.util.SortedMap;
@@ -27,13 +27,11 @@ public class IexQuoteSupplier implements QuoteSupplier {
             log.warn("The last date for which data is available is {}. No data can be obtained",
                     firstDate);
             return QuoteResponse.builder()
-                    .symbols(Collections.emptyList())
                     .build();
         }
         var map = new HashMap<String, SortedMap<LocalDate, Quote>>();
         for (String symbol : request.getSymbols()) {
-            //TODO: set range according to query
-            var range =  Range.FIVE_YEARS;
+            var range =  getRange(request.getFromDate());
             try {
                 var quotes = iexClient.getDailyQuotes(symbol,range);
                 NavigableMap<LocalDate, Quote> timeSeries = QuoteUtils.toSortedMap(quotes);
@@ -50,12 +48,31 @@ public class IexQuoteSupplier implements QuoteSupplier {
         }
         return QuoteResponse.builder()
                 .quotes(map)
-                .symbols(map.keySet())
                 .adjusted(false)
                 .includeDividends(request.isIncludeDividends())
                 .includeSplits(request.isIncludeSplits())
                 .periodType(request.getPeriodType())
                 .build();
+    }
+
+    private Range getRange(LocalDate startDate) {
+        long c = ChronoUnit.DAYS.between(startDate, LocalDate.now());
+        if (c <= 28) {
+            return Range.ONE_MONTH;
+        }
+        if (c <= 90) {
+            return Range.THREE_MONTHS;
+        }
+        if (c <= 180) {
+            return Range.SIX_MONTHS;
+        }
+        if (c <= 360) {
+            return Range.ONE_YEAR;
+        }
+        if (c <= 720) {
+            return Range.TWO_YEARS;
+        }
+        return Range.FIVE_YEARS;
     }
 
     private void addDividends(String symbol, Range range,
@@ -64,7 +81,7 @@ public class IexQuoteSupplier implements QuoteSupplier {
         if (PeriodType.DAY == request.getPeriodType() && request.isIncludeDividends()) {
             var dividends = iexClient.getDividends(symbol, range);
             for (Dividend dividend : dividends) {
-                var quote = quotes.get(dividend.getRecordDate());
+                var quote = quotes.get(dividend.getExDate());
                 if (quote != null) {
                     ((IexHistoricalQuote) quote).setDividend(dividend.getAmount());
                 }

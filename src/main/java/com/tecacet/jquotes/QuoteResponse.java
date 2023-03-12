@@ -10,8 +10,6 @@ import java.util.*;
 @Builder
 public class QuoteResponse {
 
-    private Collection<String> symbols;
-
     @Builder.Default
     private boolean adjusted = false;
 

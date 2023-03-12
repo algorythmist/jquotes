@@ -38,7 +38,6 @@ public class YahooQuoteSupplier implements QuoteSupplier {
                 .includeDividends(request.isIncludeDividends() && PeriodType.DAY == request.getPeriodType())
                 .includeSplits(request.isIncludeSplits() && PeriodType.DAY == request.getPeriodType())
                 .periodType(request.getPeriodType())
-                .symbols(map.keySet())
                 .build();
     }
 

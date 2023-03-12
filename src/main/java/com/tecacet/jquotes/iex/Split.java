@@ -19,6 +19,6 @@ public class Split {
     private Integer fromFactor;
 
     public BigDecimal getSplitRatio() {
-        return new BigDecimal(fromFactor).divide(new BigDecimal(toFactor), RoundingMode.HALF_EVEN);
+        return new BigDecimal(toFactor).divide(new BigDecimal(fromFactor), RoundingMode.HALF_EVEN);
     }
 }
