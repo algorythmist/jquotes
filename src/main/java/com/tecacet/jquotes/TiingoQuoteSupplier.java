@@ -19,30 +19,31 @@ public class TiingoQuoteSupplier implements QuoteSupplier {
 
     @Override
     public QuoteResponse getHistoricalQuotes(QuoteRequest request) {
-        var map = new HashMap<String, SortedMap<LocalDate, Quote>>();
+        var map = new TreeMap<String, SortedMap<LocalDate, Quote>>();
         for (String symbol : request.getSymbols()) {
             try {
                 var quotes = tiingoClient.getQuoteHistory(symbol, request.getFromDate(), request.getToDate());
-                map.put(symbol, toSortedMap(quotes, request.isAdjusted()));
+                NavigableMap<LocalDate, Quote> timeSeries = toSortedMap(quotes, request.isAdjusted());
+                if (request.getPeriodType() != PeriodType.DAY) {
+                    timeSeries = QuoteUtils.resample(timeSeries, request.getPeriodType());
+                }
+                map.put(symbol, timeSeries);
             } catch (IOException ioe) {
                 log.warn("Could not retrieve data for {}", symbol);
             }
-            //TODO: resample
 
         }
         return QuoteResponse.builder()
                 .quotes(map)
-                .symbols(new ArrayList<>(map.keySet()))
+                .symbols(map.keySet())
                 .adjusted(request.isAdjusted())
                 .includeDividends(true)
                 .includeSplits(true)
-                .fromDate(request.getFromDate())
-                .toDate(request.getToDate())
                 .periodType(request.getPeriodType())
                 .build();
     }
 
-    private SortedMap<LocalDate, Quote> toSortedMap(List<TiingoQuote> quotes, boolean adjusted) {
+    private NavigableMap<LocalDate, Quote> toSortedMap(List<TiingoQuote> quotes, boolean adjusted) {
         return quotes.stream()
                 .map(adjusted? this::getAdjustedQuote : Function.identity())
                 .collect(Collectors.toMap(Quote::getDate, Function.identity(),

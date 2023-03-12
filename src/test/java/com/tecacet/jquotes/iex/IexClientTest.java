@@ -3,6 +3,7 @@ package com.tecacet.jquotes.iex;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +31,7 @@ class IexClientTest {
     }
 
     @Test
-    void getDailyQuotes() {
+    void getDailyQuotes() throws IOException {
         val quotes1m = iexClient.getDailyQuotes("NFLX", Range.ONE_MONTH);
         assertTrue(quotes1m.size() > 10);
 

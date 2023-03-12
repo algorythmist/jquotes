@@ -3,6 +3,7 @@ package com.tecacet.jquotes.yahoo;
 import com.tecacet.jquotes.PeriodType;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +16,7 @@ class YahooFinanceClientTest {
     YahooFinanceClient yahooFinanceClient = YahooFinanceClient.getInstance();
 
     @Test
-    void getHistoricalQuotes() {
+    void getHistoricalQuotes() throws IOException {
 
         LocalDate fromDate = LocalDate.of(2018, 1, 2);
         LocalDate toDate = LocalDate.of(2018, 11, 1);

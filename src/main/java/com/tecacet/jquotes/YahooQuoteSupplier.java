@@ -4,12 +4,15 @@ import com.tecacet.jquotes.yahoo.Split;
 import com.tecacet.jquotes.yahoo.YahooFinanceClient;
 import com.tecacet.jquotes.yahoo.YahooQuote;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.SortedMap;
 
 @RequiredArgsConstructor
+@Slf4j
 public class YahooQuoteSupplier implements QuoteSupplier {
 
     private final YahooFinanceClient yahooFinanceClient;
@@ -20,23 +23,24 @@ public class YahooQuoteSupplier implements QuoteSupplier {
 
         for (String symbol : request.getSymbols()) {
 
-            var quoteList = yahooFinanceClient.getHistoricalQuotes(symbol, request.getFromDate(), request.getToDate(),
-                    request.getPeriodType());
-            var quotes = QuoteUtils.toSortedMap(quoteList);
-            addDividends(request, symbol, quotes);
-            addSplits(request, symbol, quotes);
-            //TODO: handle missing symbols
-            map.put(symbol, quotes);
+            try {
+                var quoteList = yahooFinanceClient.getHistoricalQuotes(symbol, request.getFromDate(), request.getToDate(),
+                        request.getPeriodType());
+                var quotes = QuoteUtils.toSortedMap(quoteList);
+                addDividends(request, symbol, quotes);
+                addSplits(request, symbol, quotes);
+                map.put(symbol, quotes);
+            } catch (IOException ioe) {
+                log.warn("Could not retrieve data for {}", symbol);
+            }
         }
         return QuoteResponse.builder()
                 .quotes(map)
                 .adjusted(true)
                 .includeDividends(request.isIncludeDividends() && PeriodType.DAY == request.getPeriodType())
                 .includeSplits(request.isIncludeSplits() && PeriodType.DAY == request.getPeriodType())
-                .fromDate(request.getFromDate())
-                .toDate(request.getToDate())
                 .periodType(request.getPeriodType())
-                .symbols(request.getSymbols())
+                .symbols(map.keySet())
                 .build();
     }
 

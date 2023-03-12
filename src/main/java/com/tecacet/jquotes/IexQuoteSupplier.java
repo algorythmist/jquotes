@@ -5,8 +5,11 @@ import com.tecacet.jquotes.iex.Range;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.NavigableMap;
 import java.util.SortedMap;
 
 @RequiredArgsConstructor
@@ -24,25 +27,31 @@ public class IexQuoteSupplier implements QuoteSupplier {
         if (firstDate.isAfter(request.getToDate())) {
             log.warn("The last date for which data is available is {}. No data can be obtained",
                     firstDate);
-            //TODO: return
+            return QuoteResponse.builder()
+                    .symbols(Collections.emptyList())
+                    .build();
         }
         var map = new HashMap<String, SortedMap<LocalDate, Quote>>();
         for (String symbol : request.getSymbols()) {
             //TODO: set range according to query
-            var quotes = iexClient.getDailyQuotes(symbol, Range.FIVE_YEARS);
-            //TODO: handle missing symbols
-            //TODO: get dividends and splits
-            //TODO: handle adjusted
-            SortedMap<LocalDate, Quote> quoteMap = QuoteUtils.toSortedMap(quotes);
-            map.put(symbol, QuoteUtils.truncate(quoteMap, request.getFromDate(), request.getToDate()));
+            try {
+                var quotes = iexClient.getDailyQuotes(symbol, Range.FIVE_YEARS);
+                //TODO: get dividends and splits
+                //TODO: handle adjusted
+                NavigableMap<LocalDate, Quote> timeSeries = QuoteUtils.toSortedMap(quotes);
+                if (request.getPeriodType() != PeriodType.DAY) {
+                    timeSeries = QuoteUtils.resample(timeSeries, request.getPeriodType());
+                }
+                map.put(symbol, QuoteUtils.truncate(timeSeries, request.getFromDate(), request.getToDate()));
+            } catch (IOException ioe) {
+                log.warn("Could not retrieve data for {}", symbol);
+            }
         }
         return QuoteResponse.builder()
                 .quotes(map)
                 .adjusted(request.isAdjusted())
                 .includeDividends(request.isIncludeDividends())
                 .includeSplits(request.isIncludeSplits())
-                .fromDate(request.getFromDate()) //TODO: actual
-                .toDate(request.getToDate()) //TODO: actual
                 .periodType(request.getPeriodType())
                 .symbols(request.getSymbols())
                 .build();

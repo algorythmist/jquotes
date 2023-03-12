@@ -4,21 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
+import java.util.*;
 
 @Getter
 @Builder
 public class QuoteResponse {
 
-    @Builder.Default
-    private List<String> symbols = new ArrayList<>();
-
-    private LocalDate fromDate;
-
-    private LocalDate toDate;
+    private Collection<String> symbols;
 
     @Builder.Default
     private boolean adjusted = false;

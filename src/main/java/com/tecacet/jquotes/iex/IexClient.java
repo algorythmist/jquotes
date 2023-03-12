@@ -72,8 +72,7 @@ public class IexClient {
 
     }
 
-    @SneakyThrows
-    public List<IexHistoricalQuote> getDailyQuotes(String symbol, Range range) {
+    public List<IexHistoricalQuote> getDailyQuotes(String symbol, Range range) throws IOException {
         String url = String.format(CHART_URL, symbol, range.getCode());
         log.info("Calling {}", url);
         val content = execute(buildUrl(url));

@@ -3,6 +3,7 @@ package com.tecacet.jquotes.yahoo;
 import com.tecacet.jquotes.PeriodType;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,8 +20,8 @@ public class YahooFinanceClient {
         return new YahooFinanceClient();
     }
 
-    @SneakyThrows
-    public List<YahooQuote> getHistoricalQuotes(String ticker, LocalDate fromDate, LocalDate toDate, PeriodType periodType) {
+    public List<YahooQuote> getHistoricalQuotes(String ticker, LocalDate fromDate, LocalDate toDate, PeriodType periodType)
+        throws IOException {
         Map<String, String> params = YahooConnectionUtils.getRequestParams(fromDate, toDate, periodType);
         InputStream is = YahooConnectionUtils.getUrlStream(ticker, params);
         return quoteParser.parse(is);
