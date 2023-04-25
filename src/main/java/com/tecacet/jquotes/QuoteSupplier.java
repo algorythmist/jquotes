@@ -7,42 +7,25 @@ import com.tecacet.jquotes.tiingo.TiingoQuoteSupplier;
 import com.tecacet.jquotes.yahoo.YahooFinanceClient;
 import com.tecacet.jquotes.yahoo.YahooQuoteSupplier;
 
+import java.util.Map;
+
 public interface QuoteSupplier {
 
     QuoteResponse getHistoricalQuotes(QuoteRequest request);
 
+    IntradayQuote getIntradayQuote(String... symbols);
+
     static QuoteSupplier getInstance() {
-        return new QuoteSupplier() {
-            @Override
-            public QuoteResponse getHistoricalQuotes(QuoteRequest request) {
-                return getInstance(request.getQuoteProvider()).getHistoricalQuotes(request);
-            }
-        };
+        return getInstance(QuoteProvider.YAHOO);
     }
 
-    static QuoteSupplier getInstance(String token) {
-        return new QuoteSupplier() {
-            @Override
-            public QuoteResponse getHistoricalQuotes(QuoteRequest request) {
-                return getInstance(request.getQuoteProvider(), token).getHistoricalQuotes(request);
-            }
-        };
-    }
 
-    private static QuoteSupplier getInstance(QuoteProvider quoteProvider) {
-        switch (quoteProvider) {
-            case TIINGO:
-                return new TiingoQuoteSupplier(TiingoClient.getInstance());
-            case IEX:
-                return new IexQuoteSupplier(IexClient.getInstance());
-            case YAHOO:
-                return new YahooQuoteSupplier(new YahooFinanceClient());
-            default:
-                throw new IllegalArgumentException("Provider not supported");
-        }
+    static QuoteSupplier getInstance(QuoteProvider quoteProvider) {
+        return getInstance(quoteProvider, null);
     }
 
     private static QuoteSupplier getInstance(QuoteProvider quoteProvider, String token) {
+        validate(quoteProvider, token);
         switch (quoteProvider) {
             case TIINGO:
                 return new TiingoQuoteSupplier(TiingoClient.getInstance(token));
@@ -52,6 +35,20 @@ public interface QuoteSupplier {
                 return new YahooQuoteSupplier(new YahooFinanceClient());
             default:
                 throw new IllegalArgumentException("Provider not supported");
+        }
+    }
+
+    private static void validate(QuoteProvider quoteProvider, String providerToken) {
+        Map<String, String> env = System.getenv();
+        if (QuoteProvider.TIINGO == quoteProvider &&
+                providerToken == null
+                && !env.containsKey("TIINGO_TOKEN")) {
+            throw new IllegalArgumentException("A tokem must be supplied or the environment variable TIINGO_TOKEN must be set");
+        }
+        if (QuoteProvider.IEX == quoteProvider &&
+                providerToken == null
+                && !env.containsKey("IEX_TOKEN")) {
+            throw new IllegalArgumentException("A tokem must be supplied or the environment variable IEX_TOKEN must be set");
         }
     }
 }

@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -45,7 +44,7 @@ public class YahooConnectionUtils {
         String url = HISTQUOTES_BASE_URL + URLEncoder.encode(symbol, StandardCharsets.UTF_8) + "?" + getURLParameters(params);
 
         // Get CSV from Yahoo
-        log.info("Sending request: {}", url);
+        log.debug("Sending request: {}", url);
 
         URL request = new URL(url);
         RedirectableRequest redirectableRequest = new RedirectableRequest(request, 5);

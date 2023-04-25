@@ -43,6 +43,11 @@ public class YahooQuoteSupplier implements QuoteSupplier {
                 .build();
     }
 
+    @Override
+    public IntradayQuote getIntradayQuote(String... symbols) {
+        return null; //TODO
+    }
+
     private void addSplits(QuoteRequest request, String symbol, SortedMap<LocalDate, Quote> quotes) {
         if (PeriodType.DAY == request.getPeriodType() && request.isIncludeSplits()) {
             var splits =

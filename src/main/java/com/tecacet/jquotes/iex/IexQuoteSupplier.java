@@ -55,6 +55,11 @@ public class IexQuoteSupplier implements QuoteSupplier {
                 .build();
     }
 
+    @Override
+    public IntradayQuote getIntradayQuote(String... symbols) {
+        return null; //TODO
+    }
+
     private Range getRange(LocalDate startDate) {
         long c = ChronoUnit.DAYS.between(startDate, LocalDate.now());
         if (c <= 28) {

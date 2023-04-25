@@ -41,6 +41,11 @@ public class TiingoQuoteSupplier implements QuoteSupplier {
                 .build();
     }
 
+    @Override
+    public IntradayQuote getIntradayQuote(String... symbols) {
+        return null;
+    }
+
     private NavigableMap<LocalDate, Quote> toSortedMap(List<TiingoQuote> quotes, boolean adjusted) {
         return quotes.stream()
                 .map(adjusted? this::getAdjustedQuote : Function.identity())

@@ -42,7 +42,7 @@ public class IexClient {
     private final TokenSupplier tokenSupplier;
 
     public static IexClient getInstance(String token) {
-        return getInstance(new FixedTokenSupplier(token));
+        return token == null? getInstance() : getInstance(new FixedTokenSupplier(token));
     }
 
     static IexClient getInstance(TokenSupplier tokenSupplier) {

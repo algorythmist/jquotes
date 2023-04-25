@@ -33,7 +33,7 @@ public class TiingoClient {
     private final TokenSupplier tokenSupplier;
 
     public static TiingoClient getInstance(String token) {
-        return getInstance(new FixedTokenSupplier(token));
+        return token == null ? getInstance() : getInstance(new FixedTokenSupplier(token));
     }
 
     public static TiingoClient getInstance(TokenSupplier tokenSupplier) {
@@ -43,6 +43,7 @@ public class TiingoClient {
     public static TiingoClient getInstance() {
         return new TiingoClient(new EnvironmentTokenSupplier("TIINGO_TOKEN"));
     }
+
     @SneakyThrows
     public StockMetadata getMetadata(String symbol) {
         String url = DAILY_URL_BASE + "/" + symbol;

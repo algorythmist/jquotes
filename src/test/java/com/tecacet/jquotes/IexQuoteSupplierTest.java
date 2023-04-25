@@ -11,18 +11,18 @@ public class IexQuoteSupplierTest {
 
     @Test
     void getDailyQuotes() {
+
+        var supplier = QuoteSupplier.getInstance(QuoteProvider.IEX);
+
         var startDate = LocalDate.now().minusYears(2);
         var endDate = LocalDate.now().minusMonths(1);
-
         var request = QuoteRequest.builder()
-                .quoteProvider(QuoteProvider.IEX)
-                .addSymbols("GOOGL", "IBM", "NOTASYMBOL")
+                .symbols("GOOGL", "IBM", "NOTASYMBOL")
                 .fromDate(startDate)
                 .toDate(endDate)
                 .periodType(PeriodType.DAY)
                 .build();
 
-        var supplier = QuoteSupplier.getInstance();
         var response = supplier.getHistoricalQuotes(request);
         var quotes = response.getQuotes();
         assertEquals(2, quotes.size());

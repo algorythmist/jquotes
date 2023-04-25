@@ -18,9 +18,8 @@ class TiingoQuoteSupplierTest {
     void missingRequiredParameter() {
         try {
             quoteSupplier.getHistoricalQuotes(QuoteRequest.builder()
-                    .quoteProvider(QuoteProvider.TIINGO)
                     .toDate(LocalDate.of(2023, 2, 28))
-                    .addSymbols("AAPL", "IBM")
+                    .symbols("AAPL", "IBM")
                     .build());
             fail();
         } catch (IllegalArgumentException iae) {
@@ -31,10 +30,9 @@ class TiingoQuoteSupplierTest {
     @Test
     void getHistoricalQuotes() {
         var response = quoteSupplier.getHistoricalQuotes(QuoteRequest.builder()
-                .quoteProvider(QuoteProvider.TIINGO)
                 .fromDate(LocalDate.of(2020, 1, 1))
                 .toDate(LocalDate.of(2023, 2, 28))
-                .addSymbols("AAPL", "IBM")
+                .symbols("AAPL", "IBM")
                 .build());
         var quotes = response.getQuotes();
         assertEquals(2, quotes.size());

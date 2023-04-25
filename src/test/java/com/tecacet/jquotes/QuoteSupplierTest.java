@@ -10,15 +10,14 @@ class QuoteSupplierTest {
     @Test
     void getTiingoDailyQuotes() {
         var request = QuoteRequest.builder()
-                .quoteProvider(QuoteProvider.TIINGO)
-                .addSymbols("GOOGL", "IBM", "NOTASYMBOL")
+                .symbols("GOOGL", "IBM", "NOTASYMBOL")
                 .fromDate(LocalDate.of(2022, 1,1))
                 .toDate(LocalDate.of(2023, 12, 31))
                 .periodType(PeriodType.DAY)
                 .build();
         validateRequest(request);
 
-        var supplier = QuoteSupplier.getInstance();
+        var supplier = QuoteSupplier.getInstance(QuoteProvider.TIINGO);
         var response = supplier.getHistoricalQuotes(request);
         validateResponse(response);
         var quotes = response.getQuotes();
@@ -36,8 +35,7 @@ class QuoteSupplierTest {
     @Test
     void getYahooDailyQuotes() {
         var request = QuoteRequest.builder()
-                .quoteProvider(QuoteProvider.YAHOO)
-                .addSymbols("GOOGL", "IBM", "NOTASYMBOL")
+                .symbols("GOOGL", "IBM", "NOTASYMBOL")
                 .fromDate(LocalDate.of(2022, 1,1))
                 .toDate(LocalDate.of(2023, 12, 31))
                 .periodType(PeriodType.DAY)

@@ -51,7 +51,7 @@ public class CrumbManager {
                 }
             }
         }
-        logger.warn("Failed to set cookie from http request. Historical quote requests will most likely fail.");
+        logger.debug("Failed to set cookie from http request. Historical quote requests may fail.");
     }
 
     private static void setCrumb() throws IOException {
@@ -78,7 +78,7 @@ public class CrumbManager {
         if (crumbResult != null && !crumbResult.isEmpty()) {
             crumb = crumbResult.trim();
         } else {
-            logger.warn("Failed to set crumb from http request. Historical quote requests will most likely fail.");
+            logger.debug("Failed to set crumb from http request. Historical quote requests may fail.");
         }
     }
 
