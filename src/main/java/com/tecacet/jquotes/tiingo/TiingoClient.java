@@ -21,8 +21,9 @@ import java.util.List;
 @Slf4j
 public class TiingoClient {
 
-    private static final String URL_BASE = "https://api.tiingo.com/tiingo";
-    private static final String DAILY_URL_BASE = URL_BASE + "/daily";
+    private static final String BASE_URL = "https://api.tiingo.com/tiingo";
+    private static final String BASE_IEX_URL = "https://api.tiingo.com/iex";
+    private static final String DAILY_URL_BASE = BASE_URL + "/daily";
     private final OkHttpClient httpClient = new OkHttpClient();
 
     private final ObjectMapper objectMapper = new ObjectMapper()
@@ -50,7 +51,13 @@ public class TiingoClient {
         return objectMapper.readValue(content, StockMetadata.class);
     }
 
-    public TiingoQuote getLastQuote(String symbol) throws IOException {
+    /**
+     * Get the last available daily quote
+     * @param symbol the security symbol
+     * @return the quote or null if not available
+     * @throws IOException if the call fails
+     */
+    public TiingoQuote getLastDailyQuote(String symbol) throws IOException {
         String url = String.format("%s/%s/prices", DAILY_URL_BASE, symbol);
         log.info("Calling url {}", url);
         String content = execute(url);
@@ -59,14 +66,29 @@ public class TiingoClient {
         return quotes.isEmpty() ? null : quotes.get(0);
     }
 
+    /**
+     * Get the quote history for a symbol between two dates
+     * @param symbol the security symbol
+     * @param startDate inclussive
+     * @param endDate inclussive
+     * @return a list of quotes
+     * @throws IOException if the call fails
+     */
     public List<TiingoQuote> getQuoteHistory(String symbol, LocalDate startDate, LocalDate endDate) throws IOException {
-        //TODO: url builder
         String url = String.format("%s/%s/prices?startDate=%s&endDate=%s", DAILY_URL_BASE, symbol,
                 startDate, endDate);
         log.info("Calling url {}", url);
         String content = execute(url);
         return objectMapper.readValue(content, new TypeReference<>() {
         });
+    }
+
+    public TiingoIexQuote getCurrentQuote(String symbol) throws IOException {
+        String url = String.format("%s/%s", BASE_IEX_URL, symbol);
+        String content = execute(url);
+        List<TiingoIexQuote> quotes = objectMapper.readValue(content, new TypeReference<>() {
+        });
+        return quotes.isEmpty() ? null : quotes.get(0);
     }
 
     private String execute(String url) throws IOException {
