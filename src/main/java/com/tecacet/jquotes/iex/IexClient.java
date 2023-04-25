@@ -66,7 +66,7 @@ public class IexClient {
         urlBuilder.addQueryParameter("symbols", symbolsString);
         urlBuilder.addQueryParameter("types", "quote");
         String url = urlBuilder.build().toString();
-        log.info("Calling {} for symbols {}", URL_BATCH_BASE, symbolsString);
+        log.debug("Calling {} for symbols {}", URL_BATCH_BASE, symbolsString);
         val content = execute(url);
         return parseQuotes(content);
 

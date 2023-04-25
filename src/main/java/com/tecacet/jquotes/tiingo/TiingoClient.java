@@ -16,6 +16,8 @@ import okhttp3.Response;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -84,12 +86,12 @@ public class TiingoClient {
         });
     }
 
-    public TiingoIexQuote getCurrentQuote(String symbol) throws IOException {
-        String url = String.format("%s/%s", BASE_IEX_URL, symbol);
+    public Map<String,TiingoIexQuote> getCurrentQuotes(String... symbols) throws IOException {
+        String url = String.format("%s/%s", BASE_IEX_URL, String.join(",", symbols));
         String content = execute(url);
         List<TiingoIexQuote> quotes = objectMapper.readValue(content, new TypeReference<>() {
         });
-        return quotes.isEmpty() ? null : quotes.get(0);
+        return quotes.stream().collect(Collectors.toMap(TiingoIexQuote::getTicker, q -> q));
     }
 
     private String execute(String url) throws IOException {

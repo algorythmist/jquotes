@@ -7,9 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.NavigableMap;
-import java.util.SortedMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -56,8 +55,24 @@ public class IexQuoteSupplier implements QuoteSupplier {
     }
 
     @Override
-    public IntradayQuote getIntradayQuote(String... symbols) {
-        return null; //TODO
+    public Map<String, IntradayQuote> getIntradayQuotes(String... symbols) {
+        return iexClient.getDelayedQuotes(symbols).entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        e -> toIntradayQuote(e.getKey(), e.getValue())));
+    }
+
+    private IntradayQuote toIntradayQuote(String symbol, IexQuote quote) {
+        var timestamp = new Date(quote.getLatestUpdate());
+        return IntradayQuote.builder()
+                .previousClose(quote.getPreviousClose())
+                .open(quote.getIexOpen())
+                .bid(quote.getIexBidPrice())
+                .ask(quote.getIexAskPrice())
+                .last(quote.getLatestPrice())
+                .volume(Long.valueOf(quote.getLatestVolume()))
+                .symbol(symbol)
+                .timestamp(timestamp.toString())
+                .build();
     }
 
     private Range getRange(LocalDate startDate) {

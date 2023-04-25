@@ -2,6 +2,7 @@ package com.tecacet.jquotes.tiingo;
 
 import com.tecacet.jquotes.*;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -42,16 +43,32 @@ public class TiingoQuoteSupplier implements QuoteSupplier {
     }
 
     @Override
-    public IntradayQuote getIntradayQuote(String... symbols) {
-        return null;
+    @SneakyThrows
+    public Map<String, IntradayQuote> getIntradayQuotes(String... symbols) {
+        return tiingoClient.getCurrentQuotes(symbols).entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        e -> toIntradayQuote(e.getKey(), e.getValue())));
+    }
+
+    private IntradayQuote toIntradayQuote(String symbol, TiingoIexQuote quote) {
+        return IntradayQuote.builder()
+                .symbol(symbol)
+                .ask(quote.getAskPrice())
+                .bid(quote.getBidPrice())
+                .last(quote.getLast())
+                .volume(Long.valueOf(quote.getVolume()))
+                .open(quote.getOpen())
+                .previousClose(quote.getPreviousClose())
+                .timestamp(quote.getTimestamp())
+                .build();
     }
 
     private NavigableMap<LocalDate, Quote> toSortedMap(List<TiingoQuote> quotes, boolean adjusted) {
         return quotes.stream()
-                .map(adjusted? this::getAdjustedQuote : Function.identity())
+                .map(adjusted ? this::getAdjustedQuote : Function.identity())
                 .collect(Collectors.toMap(Quote::getDate, Function.identity(),
-                (a , b) -> a,
-                TreeMap::new));
+                        (a, b) -> a,
+                        TreeMap::new));
     }
 
     private BaseQuote getAdjustedQuote(TiingoQuote tiingoQuote) {

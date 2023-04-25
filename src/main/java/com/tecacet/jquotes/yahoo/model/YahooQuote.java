@@ -9,15 +9,22 @@ import java.math.BigDecimal;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class YahooQuote {
 
-    private String currency;
-    private Long firstTradeDateMilliseconds;
-    private Integer priceHint;
-    private BigDecimal regularMarketChange;
+    private String symbol;
     private Long regularMarketTime;
+    private Long regularMarketVolume;
+    private BigDecimal regularMarketChange;
+    private BigDecimal regularMarketChangePercent;
     private BigDecimal regularMarketDayHigh;
     private String regularMarketDayRange;
     private BigDecimal regularMarketDayLow;
-    private Long regularMarketVolume;
+    private BigDecimal regularMarketPrice;
+    private BigDecimal regularMarketPreviousClose;
+
+    private BigDecimal bid;
+    private BigDecimal ask;
+    private Integer bidSize;
+    private Integer askSize;
+
     private BigDecimal fiftyTwoWeekLowChange;
     private BigDecimal fiftyTwoWeekLowChangePercent;
     private String fiftyTwoWeekRange;
@@ -25,8 +32,12 @@ public class YahooQuote {
     private BigDecimal fiftyTwoWeekHighChangePercent;
     private BigDecimal fiftyTwoWeekLow;
     private BigDecimal fiftyTwoWeekHigh;
+
+    private String currency;
+    private Long firstTradeDateMilliseconds;
+    private Long gmtOffSetMilliseconds;
+    private Integer priceHint;
     private Long dividendDate;
-    private BigDecimal regularMarketChangePercent;
     private String exchange;
     private String shortName;
     private String longName;
@@ -35,14 +46,9 @@ public class YahooQuote {
     private String exchangeTimezoneName;
     private String exchangeTimezoneShortName;
     private String marketState;
-    private Long gmtOffSetMilliseconds;
     private Boolean esgPopulated;
-    private BigDecimal regularMarketPrice;
-    private BigDecimal regularMarketPreviousClose;
-    private BigDecimal bid;
-    private BigDecimal ask;
-    private Integer bidSize;
-    private Integer askSize;
+
+
     private String fullExchangeName;
     private String financialCurrency;
     private BigDecimal regularMarketOpen;
@@ -75,6 +81,6 @@ public class YahooQuote {
     private Boolean tradeable;
     private Boolean cryptoTradeable;
     private String displayName;
-    private String symbol;
+
 
 }

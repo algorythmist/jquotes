@@ -13,18 +13,23 @@ public interface QuoteSupplier {
 
     QuoteResponse getHistoricalQuotes(QuoteRequest request);
 
-    IntradayQuote getIntradayQuote(String... symbols);
+    Map<String, IntradayQuote> getIntradayQuotes(String... symbols);
+
+    default  IntradayQuote getIntradayQuote(String symbol) {
+        var quotes = getIntradayQuotes(symbol);
+        return quotes.isEmpty()? null : quotes.get(symbol);
+    }
+
 
     static QuoteSupplier getInstance() {
         return getInstance(QuoteProvider.YAHOO);
     }
 
-
     static QuoteSupplier getInstance(QuoteProvider quoteProvider) {
         return getInstance(quoteProvider, null);
     }
 
-    private static QuoteSupplier getInstance(QuoteProvider quoteProvider, String token) {
+    static QuoteSupplier getInstance(QuoteProvider quoteProvider, String token) {
         validate(quoteProvider, token);
         switch (quoteProvider) {
             case TIINGO:

@@ -83,9 +83,9 @@ class TiingoClientTest {
     }
 
     @Test
-    void getCurrentQuote() throws IOException {
-        var quote = tiingoClient.getCurrentQuote("AAPL");
-        System.out.println(quote);
+    void getCurrentQuotes() throws IOException {
+        var quotes = tiingoClient.getCurrentQuotes("AAPL","GOOGL");
+        assertEquals(2, quotes.size());
     }
 
 }

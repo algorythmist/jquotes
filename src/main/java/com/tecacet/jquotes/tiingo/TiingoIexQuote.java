@@ -1,6 +1,7 @@
 package com.tecacet.jquotes.tiingo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -18,7 +19,8 @@ public class TiingoIexQuote {
     private BigDecimal last;
     private int lastSize;
     private BigDecimal tngoLast;
-    private BigDecimal prevClose;
+    @JsonProperty("prevClose")
+    private BigDecimal previousClose;
     private BigDecimal open;
     private BigDecimal high;
     private BigDecimal low;
@@ -26,6 +28,6 @@ public class TiingoIexQuote {
     private int volume;
     private int bidSize;
     private BigDecimal bidPrice;
-    private int askSize;
     private BigDecimal askPrice;
+    private int askSize;
 }

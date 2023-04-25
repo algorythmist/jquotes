@@ -3,13 +3,17 @@ package com.tecacet.jquotes.yahoo;
 import com.tecacet.jquotes.*;
 import com.tecacet.jquotes.yahoo.model.Split;
 import com.tecacet.jquotes.yahoo.model.YahooHistoricalQuote;
+import com.tecacet.jquotes.yahoo.model.YahooQuote;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -44,8 +48,23 @@ public class YahooQuoteSupplier implements QuoteSupplier {
     }
 
     @Override
-    public IntradayQuote getIntradayQuote(String... symbols) {
-        return null; //TODO
+    @SneakyThrows
+    public Map<String, IntradayQuote> getIntradayQuotes(String... symbols) {
+        return yahooFinanceClient.getLatestQuotes(symbols).stream()
+                .collect(Collectors.toMap(YahooQuote::getSymbol,
+                        this::toIntradayQuote));
+    }
+
+    private IntradayQuote toIntradayQuote(YahooQuote quote) {
+        return IntradayQuote.builder()
+                .symbol(quote.getSymbol())
+                .ask(quote.getAsk())
+                .bid(quote.getBid())
+                .last(quote.getRegularMarketPrice())
+                .volume(quote.getRegularMarketVolume())
+                .open(quote.getRegularMarketOpen())
+                .previousClose(quote.getRegularMarketPreviousClose())
+                .build();
     }
 
     private void addSplits(QuoteRequest request, String symbol, SortedMap<LocalDate, Quote> quotes) {
@@ -73,5 +92,6 @@ public class YahooQuoteSupplier implements QuoteSupplier {
             }
         }
     }
+
 
 }

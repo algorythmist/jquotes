@@ -1,19 +1,22 @@
 package com.tecacet.jquotes;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
-public interface IntradayQuote {
+@Getter
+@Builder
+@ToString
+public class IntradayQuote {
 
-    LocalDateTime getTimestamp();
-
-    BigDecimal getOpen();
-
-    BigDecimal getPreviousClose();
-
-    BigDecimal getBid();
-
-    BigDecimal getAsk();
-
-    Long getVolume();
+    private final String symbol;
+    private final BigDecimal open;
+    private final BigDecimal previousClose;
+    private final BigDecimal bid;
+    private final BigDecimal ask;
+    private final BigDecimal last;
+    private final Long volume;
+    private final String timestamp; //TODO: datetime?
 }
