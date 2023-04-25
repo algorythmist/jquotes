@@ -27,7 +27,7 @@ class YahooFinanceClientTest {
 
         YahooHistoricalQuote firstPrice = prices.get(0);
         assertEquals(fromDate, firstPrice.getDate());
-        //TODO validate quotes
+        assertEquals(new BigDecimal("42.540001"), firstPrice.getOpen());
 
         YahooHistoricalQuote lastPrice = prices.get(prices.size() - 1);
         assertEquals(LocalDate.of(2018, 10, 31), lastPrice.getDate());

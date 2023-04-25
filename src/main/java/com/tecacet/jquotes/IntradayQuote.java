@@ -18,5 +18,5 @@ public class IntradayQuote {
     private final BigDecimal ask;
     private final BigDecimal last;
     private final Long volume;
-    private final String timestamp; //TODO: datetime?
+    private final String timestamp;
 }
