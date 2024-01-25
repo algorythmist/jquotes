@@ -1,5 +1,6 @@
 package com.tecacet.jquotes;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -7,6 +8,8 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Disabled
+//Access is restricted to paid subscribers. Please upgrade to gain access
 public class IexQuoteSupplierTest {
 
     @Test

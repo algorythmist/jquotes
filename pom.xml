@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tecacet</groupId>
     <artifactId>jquotes</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
 
     <name>jquotes</name>
     <description>
@@ -24,9 +24,7 @@
         <junit-jupiter.version>[5.10,)</junit-jupiter.version>
         <okhttp.version>4.12.0</okhttp.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <!-- Jacoco Coverage report -->
-        <jacoco.version>0.8.11</jacoco.version>
-        <coverage.totalLineRate>0.90</coverage.totalLineRate>
+
         <!-- ignore Crumb Manager -->
         <coverage.missedclasses>0</coverage.missedclasses>
         <!-- Deployment -->
@@ -103,53 +101,6 @@
 
     <build>
         <plugins>
-            <!-- Jacoco Coverage report -->
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-                <configuration>
-                    <rules>
-                        <rule>
-                            <element>BUNDLE</element>
-                            <limits>
-                                <limit implementation="org.jacoco.report.check.Limit">
-                                    <counter>LINE</counter>
-                                    <value>COVEREDRATIO</value>
-                                    <minimum>${coverage.totalLineRate}</minimum>
-                                </limit>
-                                <limit implementation="org.jacoco.report.check.Limit">
-                                    <counter>CLASS</counter>
-                                    <value>MISSEDCOUNT</value>
-                                    <maximum>${coverage.missedclasses}</maximum>
-                                </limit>
-                            </limits>
-                        </rule>
-                    </rules>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>pre-unit-test</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>post-unit-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>verify</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>

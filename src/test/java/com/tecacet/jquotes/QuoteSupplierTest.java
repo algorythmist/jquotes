@@ -60,19 +60,19 @@ class QuoteSupplierTest {
 
     @Test
     void getIntradayQuotes() {
-        getIntradayQuotes(QuoteProvider.YAHOO);
         getIntradayQuotes(QuoteProvider.TIINGO);
-        getIntradayQuotes(QuoteProvider.IEX);
+        //These no longer work
+        //getIntradayQuotes(QuoteProvider.YAHOO);
+        //getIntradayQuotes(QuoteProvider.IEX);
     }
 
     private void getIntradayQuotes(QuoteProvider quoteProvider) {
-        System.out.println(quoteProvider);
         var suplier = QuoteSupplier.getInstance(quoteProvider);
         var quotes = suplier.getIntradayQuotes("AAPL", "MSFT");
         var aapl = quotes.get("AAPL");
         var msft = quotes.get("MSFT");
-        System.out.println(aapl);
-        System.out.println(msft);
+        assertNotNull(aapl);
+        assertNotNull(msft);
     }
 
     private static void validateResponse(QuoteResponse response) {
