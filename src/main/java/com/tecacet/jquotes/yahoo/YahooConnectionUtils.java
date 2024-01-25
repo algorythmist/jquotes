@@ -30,13 +30,11 @@ public class YahooConnectionUtils {
         return String.format(QUOTE_BASE_URL, String.join(",", quotes));
     }
 
-    public static Map<String, String> getRequestParams(LocalDate from, LocalDate to, PeriodType periodType) throws IOException {
+    public static Map<String, String> getRequestParams(LocalDate from, LocalDate to, PeriodType periodType) {
         Map<String, String> params = new LinkedHashMap<>();
         params.put("period1", String.valueOf(toSeconds(from)));
         params.put("period2", String.valueOf(toSeconds(to)));
         params.put("interval", getPeriodCode(periodType));
-        // crumb
-        params.put("crumb", CrumbManager.getCrumb());
         return params;
     }
 
@@ -51,7 +49,6 @@ public class YahooConnectionUtils {
         redirectableRequest.setConnectTimeout(CONNECTION_TIMEOUT);
         redirectableRequest.setReadTimeout(CONNECTION_TIMEOUT);
         Map<String, String> requestProperties = new HashMap<>();
-        requestProperties.put("Cookie", CrumbManager.getCookie());
         URLConnection connection = redirectableRequest.openConnection(requestProperties);
         return connection.getInputStream();
     }

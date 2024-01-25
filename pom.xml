@@ -16,12 +16,12 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <jflat.version>1.3.8</jflat.version>
+        <jflat.version>1.4.0</jflat.version>
         <slf4j.version>[2.0,)</slf4j.version>
-        <jackson.version>2.14.2</jackson.version>
+        <jackson.version>2.15.3</jackson.version>
         <lombok.version>[1.18.26,)</lombok.version>
-        <junit-jupiter.version>[5.9,)</junit-jupiter.version>
-        <okhttp.version>4.10.0</okhttp.version>
+        <junit-jupiter.version>[5.10,)</junit-jupiter.version>
+        <okhttp.version>4.12.0</okhttp.version>
         <commons-io.version>2.11.0</commons-io.version>
         <!-- Plugins -->
         <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
