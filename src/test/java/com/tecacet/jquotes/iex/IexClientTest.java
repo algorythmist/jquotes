@@ -1,6 +1,7 @@
 package com.tecacet.jquotes.iex;
 
 import lombok.val;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
+//Access is restricted to paid subscribers. Please upgrade to gain access
 class IexClientTest {
 
     private final IexClient iexClient = IexClient.getInstance();
@@ -42,7 +45,7 @@ class IexClientTest {
     @Test
     void getDividends() {
         val dividends = iexClient.getDividends("AAPL", Range.ONE_YEAR);
-        assertTrue(dividends.size() > 0); //This API appears to be faulty
+        assertTrue(!dividends.isEmpty()); //This API appears to be faulty
 
         val dividend = dividends.get(0);
         assertEquals("Ordinary Shares", dividend.getDescription());

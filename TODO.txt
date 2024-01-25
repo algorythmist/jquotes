@@ -1,0 +1,10 @@
+- add README
+- zero out optional div and split for tiingo quotes
+- deploy to maven
+
+- resolve TODOs
+- unify timestamp for intraday quotes
+- revisit sneakyThrows
+- CSV readers/writers
+- jacoco
+- gradle build

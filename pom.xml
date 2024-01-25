@@ -16,6 +16,7 @@
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+
         <jflat.version>1.4.0</jflat.version>
         <slf4j.version>[2.0,)</slf4j.version>
         <jackson.version>2.15.3</jackson.version>
@@ -23,11 +24,16 @@
         <junit-jupiter.version>[5.10,)</junit-jupiter.version>
         <okhttp.version>4.12.0</okhttp.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <!-- Plugins -->
-        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
-        <maven-gpg.version>1.6</maven-gpg.version>
+        <!-- Jacoco Coverage report -->
+        <jacoco.version>0.8.11</jacoco.version>
+        <coverage.totalLineRate>0.90</coverage.totalLineRate>
+        <!-- ignore Crumb Manager -->
+        <coverage.missedclasses>0</coverage.missedclasses>
+        <!-- Deployment -->
+        <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
+        <maven-gpg.version>3.1.0</maven-gpg.version>
     </properties>
 
     <dependencies>
@@ -97,6 +103,53 @@
 
     <build>
         <plugins>
+            <!-- Jacoco Coverage report -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <rules>
+                        <rule>
+                            <element>BUNDLE</element>
+                            <limits>
+                                <limit implementation="org.jacoco.report.check.Limit">
+                                    <counter>LINE</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>${coverage.totalLineRate}</minimum>
+                                </limit>
+                                <limit implementation="org.jacoco.report.check.Limit">
+                                    <counter>CLASS</counter>
+                                    <value>MISSEDCOUNT</value>
+                                    <maximum>${coverage.missedclasses}</maximum>
+                                </limit>
+                            </limits>
+                        </rule>
+                    </rules>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
