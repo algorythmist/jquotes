@@ -25,8 +25,6 @@
         <okhttp.version>4.12.0</okhttp.version>
         <commons-io.version>2.11.0</commons-io.version>
 
-        <!-- ignore Crumb Manager -->
-        <coverage.missedclasses>0</coverage.missedclasses>
         <!-- Deployment -->
         <nexus-staging-maven-plugin.version>1.6.13</nexus-staging-maven-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
