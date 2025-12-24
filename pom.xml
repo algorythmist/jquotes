@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.tecacet</groupId>
     <artifactId>jquotes</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
 
     <name>jquotes</name>
     <description>
@@ -14,14 +14,14 @@
     <url>https://github.com/algorythmist/jquotes/</url>
 
     <properties>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
 
-        <jflat.version>1.4.0</jflat.version>
+        <jflat.version>1.4.1</jflat.version>
         <slf4j.version>[2.0,)</slf4j.version>
         <jackson.version>2.18.0</jackson.version>
         <lombok.version>[1.18.26,)</lombok.version>
-        <junit-jupiter.version>[5.10,)</junit-jupiter.version>
+        <junit-jupiter.version>[6.0.1,)</junit-jupiter.version>
         <okhttp.version>4.12.0</okhttp.version>
         <commons-io.version>[2.17,)</commons-io.version>
 

@@ -33,32 +33,6 @@ class QuoteSupplierTest {
     }
 
     @Test
-    void getYahooDailyQuotes() {
-        var request = QuoteRequest.builder()
-                .symbols("GOOGL", "IBM", "NOTASYMBOL")
-                .fromDate(LocalDate.of(2022, 1,1))
-                .toDate(LocalDate.of(2023, 12, 31))
-                .periodType(PeriodType.DAY)
-                .build();
-        validateRequest(request);
-        var suplier = QuoteSupplier.getInstance();
-        var response = suplier.getHistoricalQuotes(request);
-        validateResponse(response);
-
-        assertTrue(response.isAdjusted());
-        var quotes = response.getQuotes();
-        var ibm = quotes.get("IBM");
-        var divQuote = ibm.get(LocalDate.of(2023,2,9));
-        assertEquals(1.65, divQuote.getDividend().get().doubleValue(), 0.0001);
-        assertTrue(divQuote.getSplitRatio().isEmpty());
-
-        var googl = quotes.get("GOOGL");
-        var splitQuote = googl.get(LocalDate.of(2022,7,18));
-        assertEquals(20.0, splitQuote.getSplitRatio().get().doubleValue(), 0.0001);
-        assertTrue(splitQuote.getDividend().isEmpty());
-    }
-
-    @Test
     void getIntradayQuotes() {
         getIntradayQuotes(QuoteProvider.TIINGO);
         //These no longer work

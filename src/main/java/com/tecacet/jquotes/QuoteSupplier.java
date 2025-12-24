@@ -4,8 +4,6 @@ import com.tecacet.jquotes.iex.IexClient;
 import com.tecacet.jquotes.iex.IexQuoteSupplier;
 import com.tecacet.jquotes.tiingo.TiingoClient;
 import com.tecacet.jquotes.tiingo.TiingoQuoteSupplier;
-import com.tecacet.jquotes.yahoo.YahooFinanceClient;
-import com.tecacet.jquotes.yahoo.YahooQuoteSupplier;
 
 import java.util.Map;
 
@@ -15,6 +13,7 @@ public interface QuoteSupplier {
 
     Map<String, IntradayQuote> getIntradayQuotes(String... symbols);
 
+    //TODO: test
     default  IntradayQuote getIntradayQuote(String symbol) {
         var quotes = getIntradayQuotes(symbol);
         return quotes.isEmpty()? null : quotes.get(symbol);
@@ -22,7 +21,7 @@ public interface QuoteSupplier {
 
 
     static QuoteSupplier getInstance() {
-        return getInstance(QuoteProvider.YAHOO);
+        return getInstance(QuoteProvider.TIINGO);
     }
 
     static QuoteSupplier getInstance(QuoteProvider quoteProvider) {
@@ -36,8 +35,6 @@ public interface QuoteSupplier {
                 return new TiingoQuoteSupplier(TiingoClient.getInstance(token));
             case IEX:
                 return new IexQuoteSupplier(IexClient.getInstance(token));
-            case YAHOO:
-                return new YahooQuoteSupplier(new YahooFinanceClient());
             default:
                 throw new IllegalArgumentException("Provider not supported");
         }

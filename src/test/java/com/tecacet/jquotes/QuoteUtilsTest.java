@@ -1,6 +1,5 @@
 package com.tecacet.jquotes;
 
-import com.tecacet.jquotes.yahoo.YahooQuoteParser;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -48,7 +47,7 @@ class QuoteUtilsTest {
 
     @Test
     void resample() throws IOException {
-        var parser = new YahooQuoteParser();
+        var parser = new QuoteParser();
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("TSLA.csv");
         var quotes = QuoteUtils.toSortedMap(parser.parse(is));
         assertEquals(LocalDate.of(2012, 1, 3), quotes.firstKey());
@@ -80,14 +79,14 @@ class QuoteUtilsTest {
             QuoteUtils.resample(quotes, PeriodType.DAY);
             fail();
         } catch (IllegalArgumentException iae) {
-
+            // allowed
         }
 
         try {
             QuoteUtils.resample(quotes, null);
             fail();
         } catch (IllegalArgumentException iae) {
-
+            // allowed
         }
 
     }
