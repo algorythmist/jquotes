@@ -1,7 +1,7 @@
 package com.tecacet.jquotes.io;
 
 import com.tecacet.jquotes.Quote;
-import com.tecacet.jquotes.yahoo.YahooQuoteParser;
+import com.tecacet.jquotes.QuoteParser;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -15,7 +15,7 @@ class CSVQuoteWriterTest {
 
     @Test
     void write() throws IOException {
-        var parser = new YahooQuoteParser();
+        var parser = new QuoteParser();
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("TSLA.csv");
         List<? extends Quote> prices = parser.parse(is);
         var priceWriter = new CSVQuoteWriter();
