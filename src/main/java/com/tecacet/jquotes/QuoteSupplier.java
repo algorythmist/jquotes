@@ -12,7 +12,6 @@ public interface QuoteSupplier {
 
     Map<String, IntradayQuote> getIntradayQuotes(String... symbols);
 
-    //TODO: test
     default  IntradayQuote getIntradayQuote(String symbol) {
         var quotes = getIntradayQuotes(symbol);
         return quotes.isEmpty()? null : quotes.get(symbol);
