@@ -1,11 +1,10 @@
 package com.tecacet.jquotes;
 
-import com.tecacet.jquotes.iex.IexClient;
-import com.tecacet.jquotes.iex.IexQuoteSupplier;
 import com.tecacet.jquotes.tiingo.TiingoClient;
 import com.tecacet.jquotes.tiingo.TiingoQuoteSupplier;
 
 import java.util.Map;
+import java.util.Objects;
 
 public interface QuoteSupplier {
 
@@ -13,7 +12,6 @@ public interface QuoteSupplier {
 
     Map<String, IntradayQuote> getIntradayQuotes(String... symbols);
 
-    //TODO: test
     default  IntradayQuote getIntradayQuote(String symbol) {
         var quotes = getIntradayQuotes(symbol);
         return quotes.isEmpty()? null : quotes.get(symbol);
@@ -30,14 +28,10 @@ public interface QuoteSupplier {
 
     static QuoteSupplier getInstance(QuoteProvider quoteProvider, String token) {
         validate(quoteProvider, token);
-        switch (quoteProvider) {
-            case TIINGO:
-                return new TiingoQuoteSupplier(TiingoClient.getInstance(token));
-            case IEX:
-                return new IexQuoteSupplier(IexClient.getInstance(token));
-            default:
-                throw new IllegalArgumentException("Provider not supported");
+        if (Objects.requireNonNull(quoteProvider) == QuoteProvider.TIINGO) {
+            return new TiingoQuoteSupplier(TiingoClient.getInstance(token));
         }
+        throw new IllegalArgumentException("Provider not supported");
     }
 
     private static void validate(QuoteProvider quoteProvider, String providerToken) {
@@ -46,11 +40,6 @@ public interface QuoteSupplier {
                 providerToken == null
                 && !env.containsKey("TIINGO_TOKEN")) {
             throw new IllegalArgumentException("A tokem must be supplied or the environment variable TIINGO_TOKEN must be set");
-        }
-        if (QuoteProvider.IEX == quoteProvider &&
-                providerToken == null
-                && !env.containsKey("IEX_TOKEN")) {
-            throw new IllegalArgumentException("A tokem must be supplied or the environment variable IEX_TOKEN must be set");
         }
     }
 }

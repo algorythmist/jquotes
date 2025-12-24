@@ -40,6 +40,31 @@ class QuoteSupplierTest {
         //getIntradayQuotes(QuoteProvider.IEX);
     }
 
+    @Test
+    void getIntradayQuote() {
+        var supplier = QuoteSupplier.getInstance(QuoteProvider.TIINGO);
+        var quote = supplier.getIntradayQuote("AAPL");
+        assertNotNull(quote);
+        assertEquals("AAPL", quote.getSymbol());
+    }
+
+    @Test
+    void getIntradayQuoteReturnsNullForInvalidSymbol() {
+        var supplier = QuoteSupplier.getInstance(QuoteProvider.TIINGO);
+        var quote = supplier.getIntradayQuote("NOTASYMBOL123456");
+        assertNull(quote);
+    }
+
+    @Test
+    void getInstanceWithNoArguments() {
+        var supplier = QuoteSupplier.getInstance();
+        assertNotNull(supplier);
+        // Verify it returns a working instance by calling a method
+        var quotes = supplier.getIntradayQuotes("AAPL");
+        assertNotNull(quotes);
+        assertFalse(quotes.isEmpty());
+    }
+
     private void getIntradayQuotes(QuoteProvider quoteProvider) {
         var suplier = QuoteSupplier.getInstance(quoteProvider);
         var quotes = suplier.getIntradayQuotes("AAPL", "MSFT");
